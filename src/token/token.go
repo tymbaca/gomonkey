@@ -2,6 +2,7 @@ package token
 
 const (
 	// Special
+	BANG    = "!"
 	ILLEGAL = "ILLEGAL"
 	EOF     = "EOF"
 
@@ -10,8 +11,17 @@ const (
 	INT   = "INT"
 
 	// Operators
-	PLUS   = "+"
-	ASSIGN = "="
+	PLUS     = "+"
+	MINUS    = "-"
+	ASTERISK = "*"
+	SLASH    = "/"
+	ASSIGN   = "="
+	EQ       = "=="
+	NOT_EQ   = "!="
+	LT       = "<"
+	GT       = ">"
+	LE       = "<="
+	GE       = ">="
 
 	// Delimiters
 	COMMA     = ","
@@ -22,19 +32,32 @@ const (
 	RPAREN = ")"
 	LBRACE = "{"
 	RBRACE = "}"
-	LBRACK = "["
-	RBRACK = "]"
+	// LBRACK = "["
+	// RBRACK = "]"
 
 	// Keywords
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+
+	IF     = "IF"
+	ELSE   = "ELSE"
+	TRUE   = "TRUE"
+	FALSE  = "FALSE"
+	RETURN = "RETURN"
 )
 
 var (
 	keywords = map[string]TokenType{
-		"fn":  FUNCTION,
-		"let": LET,
-		"var": LET,
+		"func": FUNCTION,
+		"fn":   FUNCTION,
+		"let":  LET,
+		"var":  LET,
+
+		"if":     IF,
+		"else":   ELSE,
+		"true":   TRUE,
+		"false":  FALSE,
+		"return": RETURN,
 	}
 )
 

@@ -29,18 +29,34 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.LBRACE, l.char)
 	case l.char == '}':
 		tok = newToken(token.RBRACE, l.char)
-	case l.char == '[':
-		tok = newToken(token.LBRACK, l.char)
-	case l.char == ']':
-		tok = newToken(token.RBRACK, l.char)
+	// case l.char == '[':
+	// 	tok = newToken(token.LBRACK, l.char)
+	// case l.char == ']':
+	// 	tok = newToken(token.RBRACK, l.char)
+
 	case l.char == ',':
 		tok = newToken(token.COMMA, l.char)
 	case l.char == ';':
 		tok = newToken(token.SEMICOLON, l.char)
+
 	case l.char == '+':
 		tok = newToken(token.PLUS, l.char)
+	case l.char == '-':
+		tok = newToken(token.MINUS, l.char)
+	case l.char == '*':
+		tok = newToken(token.ASTERISK, l.char)
+	case l.char == '/':
+		tok = newToken(token.SLASH, l.char)
+
 	case l.char == '=':
 		tok = newToken(token.ASSIGN, l.char)
+	case l.char == '!':
+		tok = newToken(token.BANG, l.char)
+	case l.char == '<':
+		tok = newToken(token.LT, l.char)
+	case l.char == '>':
+		tok = newToken(token.GT, l.char)
+
 	case l.char == 0:
 		tok.Type = token.EOF
 		tok.Literal = ""
@@ -72,6 +88,14 @@ func (l *Lexer) readChar() {
 
 	l.pos = l.readPos
 	l.readPos++
+}
+
+func (l *Lexer) peekChar() byte {
+	if l.readPos >= len(l.input) {
+		return 0
+	} else {
+		return l.input[l.readPos]
+	}
 }
 
 func (l *Lexer) readLetters() string {

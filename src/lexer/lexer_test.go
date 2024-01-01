@@ -69,12 +69,14 @@ func TestNew(t *testing.T) {
 
 func TestLexer_NextToken(t *testing.T) {
 	tests := []struct {
+		name    string
 		input   string
 		expToks []token.Token
 	}{
 		{
-			`=+(){},;`,
-			[]token.Token{
+			name:  "first symbols",
+			input: `=+(){},;`,
+			expToks: []token.Token{
 				{token.ASSIGN, "="},
 				{token.PLUS, "+"},
 				{token.LPAREN, "("},
@@ -87,14 +89,15 @@ func TestLexer_NextToken(t *testing.T) {
 			},
 		},
 		{
-			`let five = 5;
+			name: "simple program",
+			input: `let five = 5;
 let ten = 10;
 
 let add = fn(x, y) {
         x + y;
 };
 let result = add(five, ten);`,
-			[]token.Token{
+			expToks: []token.Token{
 				{token.LET, "let"},
 				{token.IDENT, "five"},
 				{token.ASSIGN, "="},
@@ -140,34 +143,122 @@ let result = add(five, ten);`,
 				{token.EOF, ""},
 			},
 		},
+		{
+			name: "additional symbols and comparison",
+			input: `
+                                !-/*5;
+                                5 < 10 > 5;
+                                age <= 16;
+                                age >= 12;
+                                age != 13;
+                                age == 15;
+                        `,
+			expToks: []token.Token{
+				{token.BANG, token.BANG},
+				{token.MINUS, token.MINUS},
+				{token.SLASH, token.SLASH},
+				{token.ASTERISK, token.ASTERISK},
+				{token.INT, "5"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				{token.INT, "5"},
+				{token.LT, token.LT},
+				{token.INT, "10"},
+				{token.GT, token.GT},
+				{token.INT, "5"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				{token.IDENT, "age"},
+				{token.LE, token.LE},
+				{token.INT, "16"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				{token.IDENT, "age"},
+				{token.GE, token.GE},
+				{token.INT, "12"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				{token.IDENT, "age"},
+				{token.NOT_EQ, token.NOT_EQ},
+				{token.INT, "13"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				{token.IDENT, "age"},
+				{token.EQ, token.EQ},
+				{token.INT, "15"},
+				{token.SEMICOLON, token.SEMICOLON},
+			},
+		},
+		{
+			name: "new keywords",
+			input: `
+                        if (age < 10) {
+                                return true;
+                        } else {
+                                return false;
+                        }
+                        `,
+			expToks: []token.Token{
+				// 1 line
+				{token.IF, "if"},
+
+				{token.LPAREN, token.LPAREN},
+				{token.IDENT, "age"},
+				{token.LT, token.LT},
+				{token.INT, "10"},
+				{token.RPAREN, token.RPAREN},
+
+				{token.LBRACE, token.LBRACE},
+
+				// 2 line
+				{token.RETURN, "return"},
+				{token.TRUE, "true"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				// 3 line
+				{token.RBRACE, token.RBRACE},
+				{token.ELSE, "else"},
+				{token.LBRACE, token.LBRACE},
+
+				// 4 line
+				{token.RETURN, "return"},
+				{token.FALSE, "false"},
+				{token.SEMICOLON, token.SEMICOLON},
+
+				// 5 line
+				{token.RBRACE, token.RBRACE},
+			},
+		},
 	}
 	for _, tt := range tests {
-		l := New(tt.input)
-		for ii, expTok := range tt.expToks {
-			tok := l.NextToken()
-			if tok.Type != expTok.Type {
-				t.Fatalf(
-					"tests[%d] - tokentype wrong. expected=%q, got=%q",
-					ii,
-					expTok.Type,
-					tok.Type,
-				)
+		t.Run(tt.name, func(t *testing.T) {
+			l := New(tt.input)
+			for ii, expTok := range tt.expToks {
+				tok := l.NextToken()
+				if tok.Type != expTok.Type {
+					t.Fatalf(
+						"tests[%d] - tokentype wrong. expected=%q, got=%q",
+						ii,
+						expTok.Type,
+						tok.Type,
+					)
+				}
+				if tok.Literal != expTok.Literal {
+					t.Fatalf(
+						"tests[%d] - literal wrong. expected=%q, got=%q",
+						ii,
+						expTok.Literal,
+						tok.Literal,
+					)
+				}
+				// t.Logf("tests[%d] - token %q parsed correctly", ii, tok)
 			}
-			if tok.Literal != expTok.Literal {
-				t.Fatalf(
-					"tests[%d] - literal wrong. expected=%q, got=%q",
-					ii,
-					expTok.Literal,
-					tok.Literal,
-				)
-			}
-			// t.Logf("tests[%d] - token %q parsed correctly", ii, tok)
-		}
-		// t.Logf(
-		// 	"test[%d] - passed with input: %s",
-		// 	i,
-		// 	tt.input,
-		// )
+			// t.Logf(
+			// 	"test[%d] - passed with input: %s",
+			// 	i,
+			// 	tt.input,
+			// )
+		})
 	}
 }
 
