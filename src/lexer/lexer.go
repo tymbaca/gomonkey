@@ -50,30 +50,42 @@ func (l *Lexer) NextToken() token.Token {
 
 	case l.char == '=':
 		if l.peekChar() == '=' {
-			tok = token.Token{Type: token.EQ, Literal: "=="}
 			l.readChar()
+			tok = token.Token{
+				Type:    token.EQ,
+				Literal: l.input[l.pos-1 : l.pos+1],
+			}
 		} else {
 			tok = newToken(token.ASSIGN, l.char)
 		}
 	case l.char == '!':
 		if l.peekChar() == '=' {
-			tok = token.Token{Type: token.NOT_EQ, Literal: "!="}
 			l.readChar()
+			tok = token.Token{
+				Type:    token.NOT_EQ,
+				Literal: l.input[l.pos-1 : l.pos+1],
+			}
 		} else {
 			// NOTE: is it legal?
 			tok = newToken(token.BANG, l.char)
 		}
 	case l.char == '<':
 		if l.peekChar() == '=' {
-			tok = token.Token{Type: token.LE, Literal: "<="}
 			l.readChar()
+			tok = token.Token{
+				Type:    token.LE,
+				Literal: l.input[l.pos-1 : l.pos+1],
+			}
 		} else {
 			tok = newToken(token.LT, l.char)
 		}
 	case l.char == '>':
 		if l.peekChar() == '=' {
-			tok = token.Token{Type: token.GE, Literal: ">="}
 			l.readChar()
+			tok = token.Token{
+				Type:    token.GE,
+				Literal: l.input[l.pos-1 : l.pos+1],
+			}
 		} else {
 			tok = newToken(token.GT, l.char)
 		}
