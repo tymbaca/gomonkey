@@ -49,13 +49,34 @@ func (l *Lexer) NextToken() token.Token {
 		tok = newToken(token.SLASH, l.char)
 
 	case l.char == '=':
-		tok = newToken(token.ASSIGN, l.char)
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.EQ, Literal: "=="}
+			l.readChar()
+		} else {
+			tok = newToken(token.ASSIGN, l.char)
+		}
 	case l.char == '!':
-		tok = newToken(token.BANG, l.char)
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.NOT_EQ, Literal: "!="}
+			l.readChar()
+		} else {
+			// NOTE: is it legal?
+			tok = newToken(token.BANG, l.char)
+		}
 	case l.char == '<':
-		tok = newToken(token.LT, l.char)
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.LE, Literal: "<="}
+			l.readChar()
+		} else {
+			tok = newToken(token.LT, l.char)
+		}
 	case l.char == '>':
-		tok = newToken(token.GT, l.char)
+		if l.peekChar() == '=' {
+			tok = token.Token{Type: token.GE, Literal: ">="}
+			l.readChar()
+		} else {
+			tok = newToken(token.GT, l.char)
+		}
 
 	case l.char == 0:
 		tok.Type = token.EOF
