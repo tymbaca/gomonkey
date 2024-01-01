@@ -27,46 +27,6 @@ func TestNew(t *testing.T) {
 	}
 }
 
-// func TestLexer_NextToken(t *testing.T) {
-// 	type fields struct {
-// 		input string
-// 		pos   int
-// 	}
-// 	tests := []struct {
-// 		input string
-// 		want  token.Token
-// 	}{
-// 		// TODO: Add test cases.
-// 		{
-// 			input: "=",
-// 			want:  token.Token{token.ASSIGN, "="},
-// 		},
-// 		{
-// 			input: "+",
-// 			want:  token.Token{token.PLUS, "+"},
-// 		},
-// 		{
-// 			input: "(",
-// 			want:  token.Token{token.LPAREN, "("},
-// 		},
-// 		{
-// 			input: ")",
-// 			want:  token.Token{token.RPAREN, ")"},
-// 		},
-// 	}
-// 	for _, tt := range tests {
-// 		t.Run(tt.name, func(t *testing.T) {
-// 			l := &Lexer{
-// 				input: tt.fields.input,
-// 				pos:   tt.fields.pos,
-// 			}
-// 			if got := l.NextToken(); !reflect.DeepEqual(got, tt.want) {
-// 				t.Errorf("Lexer.NextToken() = %v, want %v", got, tt.want)
-// 			}
-// 		})
-// 	}
-// }
-
 func TestLexer_NextToken(t *testing.T) {
 	tests := []struct {
 		name    string
