@@ -1,5 +1,5 @@
 run:
-	@echo change me
+	@go run src/main.go
 
 test:
 	go test ./...

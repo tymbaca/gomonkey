@@ -102,6 +102,8 @@ func (l *Lexer) NextToken() token.Token {
 	case isDigit(l.char):
 		tok.Literal = l.readDigits()
 		// WARN: handle "523someshit"
+		// here we can check if nextChar eather " " or letter
+		// also we can add support for "1_000_000" int literals
 		tok.Type = token.INT
 		return tok
 	default:
